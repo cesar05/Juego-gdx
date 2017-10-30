@@ -1,8 +1,10 @@
 package com.mygdx.game.comunicacion;
 
-import com.mygdx.game.Jugador;
+import com.google.gson.Gson;
 import com.mygdx.game.MyGdxGame;
-
+import com.mygdx.game.datos.Jugador;
+import javax.json.Json;
+import javax.json.JsonObject;
 import java.net.URI;
 
 import javax.websocket.*;
@@ -18,6 +20,9 @@ public class ClienteSocket {
     private MessageHandler messageHandler;
     private MyGdxGame myGdxGame;
     private int identificacion;
+    private Gson gson;
+    private String json;
+
     //public ClienteSocket(URI endpointURI) {
     public ClienteSocket(MyGdxGame myGdxGame){
         try {
@@ -26,6 +31,7 @@ public class ClienteSocket {
             container.connectToServer(this, uri);
             System.out.println("Cliente conectado");
             this.myGdxGame=myGdxGame;
+            gson=new Gson();
         }
         catch (DeploymentException e) {
             System.out.println("Conectando Cliente Error"+e.getMessage());
@@ -62,59 +68,40 @@ public class ClienteSocket {
     /**
      * Mensajes que llegan desde el servidor
      *
-     * @param message The text message
+     * @param datos The text message
      */
     @OnMessage
-    public void onMessage(String message) {
-        System.out.println("Mensaje desde servidor "+message);
+    public void onMessage(String datos) {
+        Gson g = new Gson();
+        Jugador jugador = g.fromJson(datos, Jugador.class);
 
-        if(message.equals("NUEVOJUGADOR")){
-            System.out.println("entro 1");
-            this.myGdxGame.crearJugadorOnline();
-        }
-        else if(message.indexOf("IDENTIFICACION")>=0){
+        if(jugador.getEstado().equals("NuevoJugador")){
             System.out.println("Asignando id");
-            String identificacion[]=message.split(";");
-            this.identificacion=Integer.valueOf(identificacion[1]);
+            this.identificacion=Integer.valueOf(jugador.getId());
             System.out.println("Mi id="+this.identificacion);
             this.myGdxGame.crearJugadorOnline();
         }
-        else{
-            System.out.println("holassad");
-            this.myGdxGame.movimientoJugadoresOnline(message);
+        else if(jugador.getEstado().equals("NuevoJugadorEnLinea")){
+            this.myGdxGame.crearJugadorOnline();
         }
+        else if(jugador.getEstado().equals("Jugando")){
+            this.myGdxGame.movimientoJugadoresOnline(jugador);
+        }
+
     }
 
     @OnError
     public void onError(Throwable param){
         System.out.println("Error en la comunicacion :"+param.getMessage());
     }
-    /**
-     * register message handler
-     *
-     * @param msgHandler
-     */
-    public void addMessageHandler(MessageHandler msgHandler) {
-        this.messageHandler = msgHandler;
-    }
 
-    /**
-     * Send a message.
-     *
-     * @param message
-     */
     public void sendMessage(String message) {
         this.userSession.getAsyncRemote().sendText(this.identificacion+";"+message);
     }
 
-    /**
-     * Message handler.
-     *
-     *
-     */
-    public static interface MessageHandler {
-
-        public void handleMessage(String message);
+    public void enviarDatos(Jugador jugador){
+        this.json=this.gson.toJson(jugador,Jugador.class);
+        this.userSession.getAsyncRemote().sendObject(this.json);
     }
 
     public int getIdentificacion() {

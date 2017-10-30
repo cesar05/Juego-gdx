@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.google.gson.Gson;
 import com.mygdx.game.comunicacion.ClienteSocket;
+import com.mygdx.game.datos.Jugador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,9 @@ public class MyGdxGame extends ApplicationAdapter {
 
 	private List<Sprite> jugadorsOnline;
 	private List<Texture> texturesOnline;
-	private List<Jugador> jugadorList;
+
+	private Jugador jugadorDatos;
+
 
 	@Override
 	public void create () {
@@ -36,7 +40,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			clienteSocket=new ClienteSocket(this);
 			jugadorsOnline=new ArrayList<Sprite>();
 			texturesOnline=new ArrayList<Texture>();
-			jugadorList=new ArrayList<Jugador>();
+			this.jugadorDatos=new Jugador();
 		}
 		catch(Exception e){
 			System.out.println("Error construyendo app "+e.getMessage());
@@ -69,9 +73,8 @@ public class MyGdxGame extends ApplicationAdapter {
 		boolean left=Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT);
 		boolean right=Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-		//float x=soldado.getX(),y=soldado.getY();
+
 		if(jugadorsOnline.size()>0) {
-			//float x = jugadorsOnline.get(0).getX(), y = jugadorsOnline.get(0).getY();
 			float x = jugadorsOnline.get(clienteSocket.getIdentificacion()).getX(),
 					y = jugadorsOnline.get(clienteSocket.getIdentificacion()).getY();
 			if (up && !down) {
@@ -93,38 +96,33 @@ public class MyGdxGame extends ApplicationAdapter {
 			if (y > Gdx.graphics.getHeight() - soldado.getHeight())
 				y = Gdx.graphics.getHeight() - soldado.getHeight();
 
-			//Envio posicion al servidor solo se se oprimio alguna tecla de movimiento
-			if (up || down || left || right)
-				clienteSocket.sendMessage(x + ";" + y);
-
-			//soldado.setPosition(x,y);
+			//Se envia la informacion de posicion del jugador.
+			if (up || down || left || right) {
+				jugadorDatos.setEstado("Jugando");
+				jugadorDatos.setId(String.valueOf(clienteSocket.getIdentificacion()));
+				jugadorDatos.setX(String.valueOf(x));
+				jugadorDatos.setY(String.valueOf(y));
+				clienteSocket.enviarDatos(jugadorDatos);
+			}
 
 			jugadorsOnline.get(clienteSocket.getIdentificacion()).setPosition(x, y);
 
+		}
+
+		if(Gdx.input.isKeyPressed(Input.Keys.K)) {
+			clienteSocket.enviarDatos(new Jugador("CREADO","1", "50", "60"));
 		}
 	}
 
 
 	public void crearJugadorOnline(){
-		System.out.println("entro 2");
-		//texturesOnline.add(new Texture("E:\\Desarrollos de Software\\LibGDX\\Juego-gdx\\android\\assets\\M484SpaceSoldier.png"));
 		jugadorsOnline.add(new Sprite(imgSoldado, 10, 10, 49, 49));
-		//soldado.setPosition(500,500);
 	}
 
-	public void movimientoJugadoresOnline(String datosJugador){
+	public void movimientoJugadoresOnline(Jugador datosJugador){
 		for(Sprite sprite:jugadorsOnline){
-			System.out.println("Desde movimientoJugadoresOnline = "+datosJugador);
-			String datos[]=datosJugador.split(";");
-			int id=Integer.valueOf(datos[0]);
-			jugadorsOnline.get(id).setPosition(Float.valueOf(datos[1]),Float.valueOf(datos[2]));
+			jugadorsOnline.get(Integer.valueOf(datosJugador.getId())).setPosition(Float.valueOf(datosJugador.getX()),Float.valueOf(datosJugador.getY()));
 		}
-		/*if(jugadorsOnline.size()>0) {
-			System.out.println("Desde movimientoJugadoresOnline="+datosJugador);
-			String datos[]=datosJugador.split(";");
-			jugadorsOnline.get(0).setPosition(Float.valueOf(datos[1]),Float.valueOf(datos[2]));
-		}
-		*/
 	}
 
 }
