@@ -115,8 +115,12 @@ public class MyGdxGame extends ApplicationAdapter {
 	}
 
 
-	public void crearJugadorOnline(){
-		jugadorsOnline.add(new Sprite(imgSoldado, 10, 10, 49, 49));
+	public void crearJugadorOnline(Jugador jugador){
+		//System.out.println("crearJugadorOnline");
+		//jugadorsOnline.add(new Sprite(imgSoldado, 10, 10, 49, 49));
+		Sprite sprite=new Sprite(imgSoldado, 10, 10, 49, 49);
+		sprite.setPosition(Float.valueOf(jugador.getX()),Float.valueOf(jugador.getY()));
+		jugadorsOnline.add(sprite);
 	}
 
 	public void movimientoJugadoresOnline(Jugador datosJugador){

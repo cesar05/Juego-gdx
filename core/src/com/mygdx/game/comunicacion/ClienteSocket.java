@@ -72,6 +72,8 @@ public class ClienteSocket {
      */
     @OnMessage
     public void onMessage(String datos) {
+        System.out.println(datos);
+
         Gson g = new Gson();
         Jugador jugador = g.fromJson(datos, Jugador.class);
 
@@ -79,10 +81,10 @@ public class ClienteSocket {
             System.out.println("Asignando id");
             this.identificacion=Integer.valueOf(jugador.getId());
             System.out.println("Mi id="+this.identificacion);
-            this.myGdxGame.crearJugadorOnline();
+            this.myGdxGame.crearJugadorOnline(jugador);
         }
         else if(jugador.getEstado().equals("NuevoJugadorEnLinea")){
-            this.myGdxGame.crearJugadorOnline();
+            this.myGdxGame.crearJugadorOnline(jugador);
         }
         else if(jugador.getEstado().equals("Jugando")){
             this.myGdxGame.movimientoJugadoresOnline(jugador);
