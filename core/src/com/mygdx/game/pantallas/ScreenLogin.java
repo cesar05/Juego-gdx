@@ -29,6 +29,7 @@ public class ScreenLogin implements Screen {
     TextField txtId;
     TextButton btnLogin;
     TextButton botonSalir;
+    TextButton botonRegistrarse;
 
     Skin skin;
 
@@ -51,6 +52,7 @@ public class ScreenLogin implements Screen {
         this.txtId=new TextField("",skin);
         this.txtId.setFocusTraversal(true);
 
+        botonRegistrarse = new TextButton("REGISTRARSE", skin);
         botonSalir = new TextButton("SALIR", skin);
 
         // Ahora, pongo todos los elementos en una tabla, lo cual me permitira mejorar las distribuciones de estos
@@ -60,6 +62,8 @@ public class ScreenLogin implements Screen {
         tabla.add(this.txtId).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
         tabla.row();
         tabla.add(this.btnLogin).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.row();
+        tabla.add(this.botonRegistrarse).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
         tabla.row();
         tabla.add(this.botonSalir).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
         tabla.row();
@@ -91,6 +95,16 @@ public class ScreenLogin implements Screen {
 
             }
         });
+
+        botonRegistrarse.addListener(new ClickListener(){
+            @Override
+            public  void clicked (InputEvent event, float x, float y)
+            {
+                System.out.println("Boton Registrarse");
+                juego.setScreen(new ScreenUsuario(juego));
+            }
+        });
+
         botonSalir.addListener(new ClickListener(){
             @Override
             public  void clicked (InputEvent event, float x, float y)

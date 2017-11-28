@@ -135,7 +135,7 @@ public class ScreenUsuario implements Screen {
         btnAtras.addListener(new ClickListener() {
            @Override
            public void clicked(InputEvent event, float x, float y) {
-                juego.setScreen(new Menu(juego));
+                juego.setScreen(new ScreenLogin(juego));
            }
        });
 
