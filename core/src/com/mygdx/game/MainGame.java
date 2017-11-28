@@ -17,6 +17,8 @@ public class MainGame  extends Game {
     public static int ANCHO_VIRTUAL;
     public static int ALTO_VIRTUAL;
 
+    private String identificacion;
+
     public SpriteBatch dibujadorPantalla; // Luego, este objeto sera el encargado de dibujar todas los elementos del juego en la pantalla.
 
     private AssetManager adminComponentes; // Por otra parte, este sera el el objeto que cargara y manejara los elementos del juego (Imagenes/Sonido/Musica).
@@ -50,4 +52,11 @@ public class MainGame  extends Game {
         return adminComponentes;
     }
 
+    public String getIdentificacion() {
+        return identificacion;
+    }
+
+    public void setIdentificacion(String identificacion) {
+        this.identificacion = identificacion;
+    }
 }

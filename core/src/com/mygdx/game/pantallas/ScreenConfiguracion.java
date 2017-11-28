@@ -5,7 +5,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -15,21 +17,32 @@ import com.mygdx.game.Http.HttpPeticion;
 import com.mygdx.game.MainGame;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 
 /**
  * Created by Cesar on 28/11/2017.
  */
 
-public class ScreenLogin implements Screen {
+public class ScreenConfiguracion implements Screen {
 
     MainGame juego;
 
     Label lblMsj;
+
     Label lblId;
+    Label lblSonido;
+    Label lblIdioma;
+    Label lblResolucion;
+    Label lblAvatarImg;
+
     TextField txtId;
-    TextButton btnLogin;
-    TextButton botonSalir;
-    TextButton botonRegistrarse;
+    CheckBox checkSonido;
+    SelectBox<String> sltIdioma;
+    SelectBox<String> sltResolucion;
+    TextField txtAvatarImg;
+
+    TextButton btnGuardar;
+    TextButton btnAtras;
 
     Skin skin;
 
@@ -37,7 +50,7 @@ public class ScreenLogin implements Screen {
     Table tabla;
     Stage escenario;
 
-    public ScreenLogin(final MainGame juego) {
+    public ScreenConfiguracion(final MainGame juego) {
         this.juego = juego;
 
         tabla= new Table();
@@ -46,71 +59,77 @@ public class ScreenLogin implements Screen {
         // Cargo el estilo basico de los botones y otros elementos
         skin = new Skin(Gdx.files.internal("E:\\Desarrollos de Software\\LibGDX\\Juego-gdx\\android\\assets\\Skin\\uiskin.json"));
 
-        this.btnLogin=new TextButton("ENTRAR",skin);
+        this.checkSonido=new CheckBox(" Activar sonido",skin);
+        this.sltIdioma=new SelectBox<String>(skin);
+        this.sltIdioma.setItems("Español","Ingles","Frances");
+        this.sltResolucion=new SelectBox<String>(skin);
+        this.sltResolucion.setItems("800 * 600","1152 * 648","1280 * 720","1360 * 768");
+        this.txtAvatarImg=new TextField("",skin);
+        this.btnAtras=new TextButton("ATRAS",skin);
+        this.btnGuardar = new TextButton("GUARDAR", skin);
+
         this.lblMsj=new Label("",skin);
         this.lblId=new Label("IDENTIFICACION",skin);
         this.txtId=new TextField("",skin);
         this.txtId.setFocusTraversal(true);
 
-        botonRegistrarse = new TextButton("REGISTRARSE", skin);
-        botonSalir = new TextButton("SALIR", skin);
+
 
         // Ahora, pongo todos los elementos en una tabla, lo cual me permitira mejorar las distribuciones de estos
-        tabla.defaults().pad(20.0f);
-        tabla.add(this.lblId).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.defaults().pad(10.0f);
+        tabla.add(this.checkSonido).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
         tabla.row();
-        tabla.add(this.txtId).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.add(this.sltIdioma).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
         tabla.row();
-        tabla.add(this.btnLogin).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.add(this.sltResolucion).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
         tabla.row();
-        tabla.add(this.botonRegistrarse).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.add(this.sltResolucion).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
         tabla.row();
-        tabla.add(this.botonSalir).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.add(this.txtAvatarImg).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
         tabla.row();
-        tabla.add(this.lblMsj).width(MainGame.ANCHO_VIRTUAL/3).height(MainGame.ALTO_VIRTUAL/12).center();
+        tabla.add(this.btnGuardar).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
         tabla.row();
+        tabla.add(this.btnAtras).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
+        tabla.row();
+        tabla.add(this.txtId).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
+        tabla.row();
+        tabla.add(this.lblMsj).width(MainGame.ANCHO_VIRTUAL/3).height(30).center();
         tabla.center();
 
-        btnLogin.addListener(new ClickListener() {
+        btnGuardar.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 lblMsj.setText("");
-                System.out.println("Probando registro");
+                System.out.println("Guardando Configuracion");
                 try {
-                    if(!validarDatos())return;
-                    String url="JuegoWebSocket/LoginServlet?" +
-                            "id="+txtId.getText();
+                    String sonido=checkSonido.isChecked()?"S":"N";
+                    String url="JuegoWebSocket/ConfigServlet?" +
+                            "id="+juego.getIdentificacion()+
+                            "&sonido="+URLEncoder.encode(sonido,"UTF-8")+
+                            "&idioma="+URLEncoder.encode(sltIdioma.getSelected(),"UTF-8")+
+                            "&resolucion="+ URLEncoder.encode(sltResolucion.getSelected(), "UTF-8")+
+                            "&avatarimg="+URLEncoder.encode(txtAvatarImg.getText(),"UTF-8");
+
                     System.out.println(url);
                     String msj= HttpPeticion.peticion(url);
-                    if(msj.trim().equals("AUTENTICADO")){
-                        juego.setIdentificacion(txtId.getText());
-                        juego.setScreen(new Menu(juego));
-                        limpiarDatos();
-                    }
                     lblMsj.setText(msj);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                     lblMsj.setText(e.getMessage());
-                    e.printStackTrace();
+                }
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                    lblMsj.setText(e.getMessage());
                 }
 
             }
         });
 
-        botonRegistrarse.addListener(new ClickListener(){
+        btnAtras.addListener(new ClickListener(){
             @Override
             public  void clicked (InputEvent event, float x, float y)
             {
-                System.out.println("Boton Registrarse");
-                juego.setScreen(new ScreenUsuario(juego));
-            }
-        });
-
-        botonSalir.addListener(new ClickListener(){
-            @Override
-            public  void clicked (InputEvent event, float x, float y)
-            {
-                Gdx.app.exit();
+                juego.setScreen(new Menu(juego));
             }
         });
 
@@ -158,17 +177,5 @@ public class ScreenLogin implements Screen {
         escenario.dispose();
         skin.dispose();
     }
-    public boolean validarDatos() {
-        try{
-            if(txtId.getText().trim().equals("")) throw new Exception("Identificacion es obligatoria");
-            return true;
-        }
-        catch(Exception e){
-            lblMsj.setText(e.getMessage());
-            return false;
-        }
-    }
-    public void limpiarDatos(){
-        txtId.setText("");
-    }
+
 }

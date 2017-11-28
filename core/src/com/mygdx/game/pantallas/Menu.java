@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -39,6 +40,8 @@ public class Menu implements Screen {
     TextButton botonOpciones;
     TextButton botonSalir;
 
+    Label lblIdentificacion;
+
     public static final String path="E:\\Desarrollos de Software\\LibGDX\\Juego-gdx\\android\\assets\\";
 
     public Menu(final MainGame juego) // Constructor de la pantalla menu
@@ -63,9 +66,12 @@ public class Menu implements Screen {
         botonSalir = new TextButton("SALIR", skinMenu);
 
 
+        this.lblIdentificacion=new Label("Usuario : "+juego.getIdentificacion(),skinMenu);
+
         // Ahora, pongo el titulo y los botones de este menu en una tabla, lo cual me permitira mejorar las distribuciones de los elementos
         organizadorMenu.defaults().pad(20.0f);
-        organizadorMenu.add(tituloJuego).top();
+        //organizadorMenu.add(tituloJuego).top();
+        organizadorMenu.add(lblIdentificacion).width(MainGame.ANCHO_VIRTUAL/4).height(MainGame.ALTO_VIRTUAL/8);
         organizadorMenu.row();
         organizadorMenu.add(botonJugar).width(MainGame.ANCHO_VIRTUAL/4).height(MainGame.ALTO_VIRTUAL/8);
         organizadorMenu.row();
@@ -90,7 +96,7 @@ public class Menu implements Screen {
             @Override
             public  void clicked (InputEvent event, float x, float y)
             {
-                //juego.setScreen(new PantallaConfig(juego));
+                juego.setScreen(new ScreenConfiguracion(juego));
             }
         });
 
@@ -123,7 +129,8 @@ public class Menu implements Screen {
     public void render(float delta)
     {
         // Limpiamos la pantalla antes de dibujar cualquier cosa
-        Gdx.gl.glClearColor(0,0,0,1);
+        //Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Ahora, con la siguiente instruccion se procede a decirle al juego en donde debe apuntar la camara segun la vista que se establecio
