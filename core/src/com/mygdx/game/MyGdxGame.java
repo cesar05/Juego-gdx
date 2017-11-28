@@ -67,6 +67,11 @@ public class MyGdxGame extends ApplicationAdapter {
 		imgSoldado.dispose();
 	}
 
+	@Override
+	public void resume() {
+		super.resume();
+	}
+
 	public void controles(){
 		boolean up=Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP);
 		boolean down=Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN);

@@ -49,7 +49,7 @@ public class ClienteSocket {
      */
     @OnOpen
     public void onOpen(Session userSession) {
-        System.out.println("opening websocket");
+        System.out.println("opening websocket = "+userSession.getId());
         this.userSession = userSession;
     }
 
@@ -61,7 +61,7 @@ public class ClienteSocket {
      */
     @OnClose
     public void onClose(Session userSession, CloseReason reason) {
-        System.out.println("closing websocket");
+        System.out.println("closing websocket = "+userSession.getId());
         this.userSession = null;
     }
 
