@@ -37,7 +37,7 @@ public class MyGdxGame extends ApplicationAdapter {
 			imgSoldado = new Texture("E:\\Desarrollos de Software\\LibGDX\\Juego-gdx\\android\\assets\\M484SpaceSoldier.png");
 			soldado = new Sprite(imgSoldado, 10, 10, 49, 49);
 			soldado.setPosition(50, 50);
-			clienteSocket=new ClienteSocket(this);
+			//clienteSocket=new ClienteSocket(this);
 			jugadorsOnline=new ArrayList<Sprite>();
 			texturesOnline=new ArrayList<Texture>();
 			this.jugadorDatos=new Jugador();

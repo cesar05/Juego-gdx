@@ -3,6 +3,8 @@ package com.mygdx.game.comunicacion;
 import com.google.gson.Gson;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.datos.Jugador;
+import com.mygdx.game.pantallas.IniciarJuego;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import java.net.URI;
@@ -18,13 +20,13 @@ public class ClienteSocket {
 
     Session userSession = null;
     private MessageHandler messageHandler;
-    private MyGdxGame myGdxGame;
+    private IniciarJuego myGdxGame;
     private int identificacion;
     private Gson gson;
     private String json;
 
     //public ClienteSocket(URI endpointURI) {
-    public ClienteSocket(MyGdxGame myGdxGame){
+    public ClienteSocket(IniciarJuego myGdxGame){
         try {
             URI uri=new URI("ws://localhost:8080/JuegoWebSocket/ServerSocket");
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
