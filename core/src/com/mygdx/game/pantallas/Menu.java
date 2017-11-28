@@ -36,6 +36,7 @@ public class Menu implements Screen {
     Skin skinMenu;
     Image tituloJuego;
     TextButton botonJugar;
+    TextButton botonRegistrarse;
     TextButton botonOpciones;
     TextButton botonSalir;
 
@@ -61,6 +62,7 @@ public class Menu implements Screen {
         botonJugar = new TextButton("JUGAR", skinMenu);
         botonOpciones = new TextButton("OPCIONES", skinMenu);
         botonSalir = new TextButton("SALIR", skinMenu);
+        botonRegistrarse = new TextButton("REGISTRARSE", skinMenu);
 
         // Ahora, pongo el titulo y los botones de este menu en una tabla, lo cual me permitira mejorar las distribuciones de los elementos
         organizadorMenu.defaults().pad(20.0f);
@@ -69,6 +71,8 @@ public class Menu implements Screen {
         organizadorMenu.add(botonJugar).width(MainGame.ANCHO_VIRTUAL/4).height(MainGame.ALTO_VIRTUAL/8);
         organizadorMenu.row();
         organizadorMenu.add(botonOpciones).width(MainGame.ANCHO_VIRTUAL/4).height(MainGame.ALTO_VIRTUAL/8);
+        organizadorMenu.row();
+        organizadorMenu.add(botonRegistrarse).width(MainGame.ANCHO_VIRTUAL/4).height(MainGame.ALTO_VIRTUAL/8);
         organizadorMenu.row();
         organizadorMenu.add(botonSalir).width(MainGame.ANCHO_VIRTUAL/4).height(MainGame.ALTO_VIRTUAL/8);
         organizadorMenu.center();
@@ -80,7 +84,7 @@ public class Menu implements Screen {
             {
                 //juego.setScreen(new PantallaModo(juego));
                 System.out.println("Boton Juego");
-                juego.setScreen(new IniciarJuego());
+                juego.setScreen(new IniciarJuego(juego));
 
             }
         });
@@ -105,6 +109,16 @@ public class Menu implements Screen {
             }
         });
 
+        botonRegistrarse.addListener(new ClickListener(){
+            @Override
+            public  void clicked (InputEvent event, float x, float y)
+            {
+                System.out.println("Boton Registrarse");
+                juego.setScreen(new ScreenUsuario(juego));
+            }
+        });
+
+
         // Ya con todos los elementos organizados procedemos a agregarlos al escenario, que es al fin y al cabo quien dirige la pantalla
         escenarioMenu.addActor(organizadorMenu);
 
@@ -122,7 +136,7 @@ public class Menu implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Ahora, con la siguiente instruccion se procede a decirle al juego en donde debe apuntar la camara segun la vista que se establecio
-        camara.update();
+        //camara.update();
         //juego.dibujadorPantalla.setProjectionMatrix(camara.combined);
 
         // Finalmente, procedemos a dibujar el menu

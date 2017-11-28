@@ -8,6 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.mygdx.game.MainGame;
 import com.mygdx.game.comunicacion.ClienteSocket;
 import com.mygdx.game.datos.Jugador;
 
@@ -20,6 +25,8 @@ import java.util.List;
 
 public class IniciarJuego implements Screen {
 
+    MainGame juego;
+
     SpriteBatch batch;
     private Texture img,imgSoldado;
     private TextureRegion textureRegionSoldado;
@@ -31,9 +38,16 @@ public class IniciarJuego implements Screen {
     private List<Sprite> jugadorsOnline;
     private List<Texture> texturesOnline;
 
+
     private Jugador jugadorDatos;
 
-    public IniciarJuego(){
+    Skin skin;
+    TextButton btnSalir;
+    //Para organizar los elementos que van en este Screen
+    Table tabla;
+    Stage escenario;
+
+    public IniciarJuego(final MainGame juego){
 
         try {
             batch = new SpriteBatch();
@@ -45,6 +59,15 @@ public class IniciarJuego implements Screen {
             texturesOnline=new ArrayList<Texture>();
             this.jugadorDatos=new Jugador();
 
+            /*
+            this.btnSalir=new TextButton("Salir",skin);
+            tabla= new Table();
+            escenario = new Stage();
+            tabla.defaults().pad(20.0f);
+            tabla.add(this.btnSalir).width(50).height(20);
+            tabla.row();
+
+            escenario.addActor(tabla);*/
         }
         catch(Exception e){
             System.out.println("Error construyendo app "+e.getMessage());
@@ -62,7 +85,10 @@ public class IniciarJuego implements Screen {
             sprite.draw(batch);
         }
         controles();
+
         batch.end();
+        //escenario.act(delta);
+        //escenario.draw();
     }
 
     @Override
