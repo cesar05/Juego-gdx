@@ -129,7 +129,6 @@ public class ScreenUsuario implements Screen {
                     System.out.println(e.getMessage());
                     e.printStackTrace();
                 }
-                //juego.setScreen(new IniciarJuego());
             }
         });
 

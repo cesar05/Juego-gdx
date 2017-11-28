@@ -6,6 +6,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.pantallas.Menu;
+import com.mygdx.game.pantallas.ScreenLogin;
 
 /**
  * Created by Cesar on 27/11/2017.
@@ -36,7 +37,7 @@ public class MainGame  extends Game {
         adminComponentes.load(path+"Imagenes\\backgroundMenus.png", Texture.class);
 
         // Ahora llamamos la pantalla de carga
-        setScreen(new Menu(this));
+        setScreen(new ScreenLogin(this));
     }
 
     @Override

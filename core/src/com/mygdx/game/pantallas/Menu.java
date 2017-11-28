@@ -105,7 +105,8 @@ public class Menu implements Screen {
                 {
                     juego.getAdminComponentes().get("Audios/intro.ogg", Music.class).stop();
                 }*/
-                Gdx.app.exit(); // Esta instruccion en especial termina de manera adecuda la apliacion
+                juego.setScreen(new ScreenLogin(juego));
+                //Gdx.app.exit();
             }
         });
 
